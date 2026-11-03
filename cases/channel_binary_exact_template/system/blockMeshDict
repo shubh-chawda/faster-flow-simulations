@@ -1,0 +1,84 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 2D plane channel — BINARY-EXACT mesh for the fp32/fp64 comparison.          |
+|                                                                            |
+| Cell counts are powers of two (nx=1024, ny=256) so the cell spacings are    |
+| exact in single precision: dividing by 2^k preserves the mantissa, so       |
+|   dx = L/nx  = 1.0/1024 = 0.0009765625 = 2^-10   (exactly representable)    |
+|   dy = H/ny  = fp32(0.1)/256                     (mantissa preserved)       |
+| cf. nx=800 -> dx = 0.00125, which is NOT exact in fp32.                     |
+|                                                                            |
+| Rationale: a collaborator at Arm traced an OpenFOAM SP bug: round-off in   |
+| the empty-patch face-area sum exceeds the 1e-6 threshold in polyMesh.C,     |
+| marking x/y as empty solution directions, after which fvMatrixSolve.C       |
+| silently SKIPS those momentum components. Power-of-two counts avoid it.     |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+L   1.0;    // channel length  (x)  - binary-exact
+H   0.1;    // channel height  (y)  - NOT binary-exact (sets Re_H; must not change)
+W   0.01;   // span / depth    (z)  - 1 cell, physically arbitrary in 2D
+
+vertices
+(
+    (0   0   0)    // 0
+    ($L  0   0)    // 1
+    ($L  $H  0)    // 2
+    (0   $H  0)    // 3
+    (0   0   $W)   // 4
+    ($L  0   $W)   // 5
+    ($L  $H  $W)   // 6
+    (0   $H  $W)   // 7
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (__NX__ __NY__ 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces ( (0 4 7 3) );
+    }
+    outlet
+    {
+        type patch;
+        faces ( (1 2 6 5) );
+    }
+    lowerWall
+    {
+        type wall;
+        faces ( (0 1 5 4) );
+    }
+    upperWall
+    {
+        type wall;
+        faces ( (3 7 6 2) );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces ( (4 5 6 7) (0 3 2 1) );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

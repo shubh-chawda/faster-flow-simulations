@@ -1,0 +1,42 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// __PSOLVER__ / __PTOL__ substituted by the driver. Identical across precisions.
+
+solvers
+{
+    p
+    {
+__PSOLVERBLOCK__
+        tolerance        __PTOL__;
+        relTol           0.05;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol           0;
+    }
+
+    U
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-05;
+        relTol          0;
+    }
+}
+
+PISO
+{
+    nCorrectors              2;
+    nNonOrthogonalCorrectors 0;
+}
+
+// ************************************************************************* //

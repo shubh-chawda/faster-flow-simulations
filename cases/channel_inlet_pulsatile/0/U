@@ -1,0 +1,70 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        // Pulsatile inlet: a parabola whose amplitude is modulated in time.
+        //   u(y,t) = (1 + A*sin(2*pi*f*t)) * Umax * 4*y*(H-y)/H^2
+        //
+        // NOTE (physics caveat worth raising with the group): this imposes a
+        // *quasi-steady* parabola. True fully-developed pulsatile channel
+        // flow is the Womersley solution (see validation/womersley.png),
+        // whose profile changes SHAPE over the cycle at alpha~4 (blunting,
+        // near-wall overshoot, phase lag). The simulation interior will
+        // relax toward Womersley away from the inlet; comparing the two is
+        // the interesting bit.
+        type            codedFixedValue;
+        value           uniform (0 0 0);
+        name            pulsatileInlet;
+        code
+        #{
+            const scalar Umax = 1.5;
+            const scalar H    = 0.1;
+            const scalar A    = 0.5;     // modulation amplitude (0..1)
+            const scalar f    = 1.0;     // Hz
+            const scalar pi   = 3.14159265358979;
+            const scalar t    = this->db().time().value();
+            const scalar mod  = 1.0 + A*Foam::sin(2.0*pi*f*t);
+
+            const vectorField& Cf = patch().Cf();
+            vectorField Up(Cf.size(), vector::zero);
+            forAll(Cf, i)
+            {
+                const scalar y = Cf[i].y();
+                Up[i] = vector(mod*Umax*4.0*y*(H - y)/(H*H), 0.0, 0.0);
+            }
+            operator==(Up);
+        #};
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    lowerWall
+    {
+        type            noSlip;
+    }
+    upperWall
+    {
+        type            noSlip;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

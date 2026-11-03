@@ -1,0 +1,105 @@
+==============================================================================
+VALIDITY CHECK — any 'NO' invalidates that run's results
+==============================================================================
+  t_fp64_r1      fp64  steps=  512 Ux=  512 Uy=  512  -> yes
+  t_fp32_r1      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  t_fp64_r2      fp64  steps=  512 Ux=  512 Uy=  512  -> yes
+  t_fp32_r2      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  t_fp64_r3      fp64  steps=  512 Ux=  512 Uy=  512  -> yes
+  t_fp32_r3      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  acc_fp64       fp64  steps= 5120 Ux= 5120 Uy= 5120  -> yes
+  acc_fp32       fp32  steps= 5120 Ux= 5120 Uy= 5120  -> yes
+  pcg_fp64_r1    fp64  steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp64ctl_r1   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp32_r1      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp64ctl_r2   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp32_r2      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp64ctl_r3   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  c_fp32_r3      fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp64_r1     fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp32_r1     fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp64_r2     fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp32_r2     fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp64_r3     fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  p2_fp32_r3     fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp64_r1   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp32_r1   fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp64_r2   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp32_r2   fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp64_r3   fp64ctl steps=  512 Ux=  512 Uy=  512  -> yes
+  m16k_fp32_r3   fp32  steps=  512 Ux=  512 Uy=  512  -> yes
+  floor_16k      fp32  steps=   30 Ux=   30 Uy=   30  -> yes
+  floor_4k       fp32  steps=   30 Ux=   30 Uy=   30  -> yes
+  floor_65k      fp32  steps=   30 Ux=   30 Uy=   30  -> yes
+  floor_262k     fp32  steps=   30 Ux=   30 Uy=   30  -> yes
+  floor_262k_fp64 fp64ctl steps=   30 Ux=   30 Uy=   30  -> yes
+  b262k_fp64_r1  fp64ctl steps=  128 Ux=  128 Uy=  128  -> yes
+  b262k_fp32_r1  fp32  steps=  128 Ux=  128 Uy=  128  -> yes
+  b262k_fp64_r2  fp64ctl steps=  128 Ux=  128 Uy=  128  -> yes
+
+  35/35 runs valid
+
+==============================================================================
+TIMING & MEMORY — GAMG  [BUILD-CONTROLLED: fp32 vs same-tree/compiler/flags fp64]
+  65536 cells, ptol 1e-4, 512 steps
+==============================================================================
+  fp64ctl: exec 17.41s (range 16.86–17.50, ±1.8%, n=3)
+        peak RSS 94.50 MiB (range 94.40–94.90, ±0.3%, n=3)
+        p-iters median 2, p final-residual median 5.97e-05
+  fp32: exec 22.83s (range 22.83–23.04, ±0.5%, n=3)
+        peak RSS 67.80 MiB (range 65.80–69.40, ±2.7%, n=3)
+        p-iters median 1, p final-residual median 8.40e-05
+
+  SPEED : fp32 31.1% SLOWER   [effect -31.1%, timing spread 3.7%]
+  MEMORY: fp32 uses 28.3% LESS memory (67.8 vs 94.5 MiB, spread 5.3%)
+
+==============================================================================
+TIMING & MEMORY — GAMG  [fp32 vs shipped CI fp64 build]
+  65536 cells, ptol 1e-4, 512 steps
+==============================================================================
+  fp64: exec 17.17s (range 16.71–17.25, ±1.6%, n=3)
+        peak RSS 98.60 MiB (range 92.20–107.40, ±7.7%, n=3)
+        p-iters median 2, p final-residual median 5.97e-05
+  fp32: exec 22.99s (range 22.95–23.04, ±0.2%, n=3)
+        peak RSS 72.90 MiB (range 69.60–74.10, ±3.1%, n=3)
+        p-iters median 1, p final-residual median 8.40e-05
+
+  SPEED : fp32 33.9% SLOWER   [effect -33.9%, timing spread 3.1%]
+  MEMORY: fp32 uses 26.1% LESS memory (72.9 vs 98.6 MiB, spread 15.4%)
+
+==============================================================================
+TIMING & MEMORY — PCG
+  65536 cells, ptol 1e-4, 512 steps
+==============================================================================
+  fp64: exec 215.58s (range 215.58–215.58, ±0.0%, n=1)
+        peak RSS 86.80 MiB (range 86.80–86.80, ±0.0%, n=1)
+        p-iters median 130, p final-residual median 9.50e-05
+
+==============================================================================
+ACCURACY at steady state (analytical: U_peak=1.5, tau_w=0.06)
+==============================================================================
+  prec       U_peak   U_centre   errMax%    errL2%     tau_w   Co_max   cont_cum
+  fp64     1.499543   1.499543    0.0244    0.0130  0.060012   0.4311   5.11e-06
+  fp32     1.499543   1.499543    0.0243    0.0130  0.060012   0.4311  -5.87e-06
+
+  |U_peak(fp32) - U_peak(fp64)| = 3.00e-07 m/s
+
+wrote fp32_vs_fp64_final.png
+============================================================================================
+fp32 slowdown vs capped-solve fraction (icoFoam/GAMG, ptol 1e-4)
+============================================================================================
+
+--- A. ACCURACY-MATCHED points (both precisions reach ptol 1e-4) ---
+     mesh  n fp64  n fp32  fp64 s/step  fp32 s/step  fp32/fp64  fp32 capped
+   16,384       3       3       0.0064       0.0060      0.93x        0.00%
+   65,536       3       3       0.0340       0.0446      1.31x        0.20%
+
+--- B. WORK COMPARISON ONLY — NOT accuracy-matched, NOT comparable to A ---
+    At this size fp32 NEVER reaches ptol 1e-4: it caps on most solves and
+    returns a residual ~1.4e-4. fp64 reaches the tolerance normally.
+    This measures work done at a fixed tolerance TARGET, not equal-accuracy speed.
+     mesh  n fp64  n fp32  fp64 s/step  fp32 s/step  fp32/fp64  fp32 capped
+  262,144       2       1       0.2316      26.7667    115.59x       95.31%
+    ** ASYMMETRIC REPEATS: fp64 n=2, fp32 n=1 (a 2nd fp32 repeat costs ~49 min; effect is ~116x) **
+
+wrote capped_fraction.png

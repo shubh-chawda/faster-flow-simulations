@@ -1,0 +1,57 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        // Fully-developed parabolic (Poiseuille) profile imposed at inlet.
+        //   u(y) = Umax * 4*y*(H-y)/H^2 ,  Umax = 1.5*Umean
+        // codedFixedValue compiles this C++ at run time (no extra libs).
+        type            codedFixedValue;
+        value           uniform (0 0 0);
+        name            parabolicInlet;
+        code
+        #{
+            const scalar Umax = 1.5;
+            const scalar H    = 0.1;
+            const vectorField& Cf = patch().Cf();   // face centres
+            vectorField Up(Cf.size(), vector::zero);
+            forAll(Cf, i)
+            {
+                const scalar y = Cf[i].y();
+                Up[i] = vector(Umax*4.0*y*(H - y)/(H*H), 0.0, 0.0);
+            }
+            operator==(Up);
+        #};
+    }
+    outlet
+    {
+        type            zeroGradient;
+    }
+    lowerWall
+    {
+        type            noSlip;
+    }
+    upperWall
+    {
+        type            noSlip;
+    }
+    frontAndBack
+    {
+        type            empty;
+    }
+}
+
+// ************************************************************************* //

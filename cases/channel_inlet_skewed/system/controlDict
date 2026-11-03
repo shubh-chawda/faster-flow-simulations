@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// PARAMETERISED for the mesh-independence sweep (run_sweep.py substitutes the
+// __TOKENS__). deltaT is set so Co = Umax*dt/dx = 0.3 on every mesh, i.e.
+// dt = 0.3*dx/Umax = 0.3*(L/nx)/1.5 = 0.2/nx . endTime is a
+// fixed PHYSICAL time (steady state is a physical-time property, mesh
+// independent); convergence is verified post-hoc from residuals + dU.
+
+application     icoFoam;
+
+startFrom       startTime;
+startTime       0;
+
+stopAt          endTime;
+endTime         2.5;
+
+deltaT          2e-4;
+
+writeControl    runTime;
+writeInterval   0.5;
+
+purgeWrite      0;
+writeFormat     ascii;
+writePrecision  8;
+writeCompression off;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable false;
+adjustTimeStep  no;
+
+// ************************************************************************* //

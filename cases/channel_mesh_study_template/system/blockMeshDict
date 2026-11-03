@@ -1,0 +1,76 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 2D plane channel, PARAMETERISED for the mesh-independence sweep.            |
+| nx, ny are substituted by run_sweep.py. Aspect ratio is held at 2          |
+| (dx = 2*dy) by construction: nx = 5*ny for this L=1.0, H=0.1 geometry.     |
+| "2D" is faked by 1 cell in z with 'empty' front/back patches.              |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+L   1.0;    // channel length  (x)
+H   0.1;    // channel height  (y)
+W   0.01;   // span / depth    (z) - 1 cell
+
+vertices
+(
+    (0   0   0)    // 0
+    ($L  0   0)    // 1
+    ($L  $H  0)    // 2
+    (0   $H  0)    // 3
+    (0   0   $W)   // 4
+    ($L  0   $W)   // 5
+    ($L  $H  $W)   // 6
+    (0   $H  $W)   // 7
+);
+
+blocks
+(
+    hex (0 1 2 3 4 5 6 7) (__NX__ __NY__ 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+boundary
+(
+    inlet
+    {
+        type patch;
+        faces ( (0 4 7 3) );
+    }
+    outlet
+    {
+        type patch;
+        faces ( (1 2 6 5) );
+    }
+    lowerWall
+    {
+        type wall;
+        faces ( (0 1 5 4) );
+    }
+    upperWall
+    {
+        type wall;
+        faces ( (3 7 6 2) );
+    }
+    frontAndBack
+    {
+        type empty;
+        faces ( (4 5 6 7) (0 3 2 1) );
+    }
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

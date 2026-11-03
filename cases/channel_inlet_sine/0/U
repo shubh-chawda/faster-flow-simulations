@@ -1,0 +1,27 @@
+FoamFile { version 2.0; format ascii; class volVectorField; object U; }
+dimensions      [0 1 -1 0 0 0 0];
+internalField   uniform (0 0 0);
+boundaryField
+{
+    inlet
+    {
+        // Oscillating UNIFORM inlet: Ux(t) = 1 + 0.5*sin(2*pi*f*t), f = 1 Hz.
+        // Bulk velocity stays in [0.5, 1.5] m/s -> never reverses, so this avoids
+        // the near-wall backflow that a full Womersley inlet produces.
+        type            uniformFixedValue;
+        uniformValue
+        {
+            type        sine;
+            frequency   1;
+            amplitude   0.5;        // scalar oscillation magnitude
+            scale       (1 0 0);    // direction of oscillation
+            level       (1 0 0);    // mean inlet velocity
+            t0          0;
+        }
+        value           uniform (1 0 0);
+    }
+    outlet    { type zeroGradient; }
+    lowerWall { type noSlip; }
+    upperWall { type noSlip; }
+    frontAndBack { type empty; }
+}

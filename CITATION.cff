@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "Faster Flow Simulations: multigrid and single precision for the pressure solve in OpenFOAM"
+type: software
+authors:
+  - family-names: Chawda
+    given-names: Shubh
+    affiliation: "University of Manchester"
+date-released: 2026-07-30
+version: 1.0.0
+repository-code: "https://github.com/shubh-chawda/faster-flow-simulations"
+license: MIT
+keywords:
+  - computational fluid dynamics
+  - OpenFOAM
+  - multigrid
+  - GAMG
+  - mixed precision
+  - single precision
+  - pressure Poisson equation
+abstract: >-
+  Measurements of two ways to cut the cost of the pressure solve in incompressible
+  CFD, on a validated 2D laminar channel in OpenFOAM v2512: algebraic multigrid
+  (GAMG), which brings cost growth from n^1.51 down to n^1.22, and single-precision
+  arithmetic, which matches double precision in accuracy and saves 14-28% memory but
+  whose speed effect reverses with mesh size because its pressure-residual floor
+  grows as sqrt(N).

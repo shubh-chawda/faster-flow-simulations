@@ -1,0 +1,32 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     icoFoam;
+
+startFrom       startTime;
+startTime       0;
+
+stopAt          endTime;
+endTime         4;            // 4 periods at f=1 Hz
+
+deltaT          0.001;        // Co = Umax*dt/dx = 1.5*0.001/0.005 = 0.30
+
+writeControl    runTime;
+writeInterval   0.05;         // 20 frames per cycle
+
+purgeWrite      0;
+writeFormat     ascii;
+writePrecision  6;
+writeCompression off;
+timeFormat      general;
+timePrecision   6;
+runTimeModifiable true;
+
+// ************************************************************************* //

@@ -1,0 +1,35 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Final-week fp32/fp64 comparison. Identical for both precisions; only the
+// icoFoam binary differs. dt chosen so Co = Umax*dt/dx = 0.3 exactly.
+
+application     icoFoam;
+
+startFrom       startTime;
+startTime       0;
+
+stopAt          endTime;
+endTime         __ENDTIME__;
+
+deltaT          __DELTAT__;
+
+writeControl    runTime;
+writeInterval   __WRITEINTERVAL__;
+
+purgeWrite      2;
+writeFormat     ascii;
+writePrecision  8;
+writeCompression off;
+timeFormat      general;
+timePrecision   8;
+runTimeModifiable false;
+adjustTimeStep  no;
+
+// ************************************************************************* //

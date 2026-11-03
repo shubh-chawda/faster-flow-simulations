@@ -1,0 +1,47 @@
+/*--------------------------------*- C++ -*----------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      fvSolution;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// Pressure Poisson solved with GAMG on EVERY mesh: the scaling study
+// already established GAMG as the right choice, and its iteration count is
+// near mesh-independent. Settings are held IDENTICAL across all meshes and
+// both precisions; only the mesh (and the dt that follows from it) varies.
+
+solvers
+{
+    p
+    {
+        solver           GAMG;
+        smoother         GaussSeidel;
+        tolerance        1e-06;
+        relTol           0.05;
+        nCellsInCoarsestLevel 10;
+    }
+
+    pFinal
+    {
+        $p;
+        relTol           0;
+    }
+
+    U
+    {
+        solver          smoothSolver;
+        smoother        symGaussSeidel;
+        tolerance       1e-05;
+        relTol          0;
+    }
+}
+
+PISO
+{
+    nCorrectors              2;
+    nNonOrthogonalCorrectors 0;
+}
+
+// ************************************************************************* //
